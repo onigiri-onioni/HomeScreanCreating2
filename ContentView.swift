@@ -57,7 +57,9 @@ struct ContentView_Previews: PreviewProvider {
 func makeApps() -> [AppStruct] {
     var tempApps:[AppStruct]=[]
     
-    for x in 0...24 {
+    tempApps.append(AppStruct(id: 0, appName: "HomeScreen", appIcon: "house.fill", urlScheme: "HomeScrean"))
+    
+    for x in 1...24 {
         //CGFloatでないと計算時間がかかる
         switch CGFloat(x%4){
         case 0:

@@ -12,6 +12,7 @@ import SwiftUI
 struct AppView: View {
     var app:AppStruct
     let urlOpener = UIApplication.shared
+    @State var isHomeScreenView:Bool = false
     
     var body: some View {
         
@@ -21,25 +22,38 @@ struct AppView: View {
                 .frame(width: 50, height: 50, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: 10.5))
                 .offset(x: 0, y: -13)
-            Button(action: {
-                print("test")
-                //アプリが設定されていない場合はボタンを押しても無反応にする
-                if !self.app.urlScheme.isEmpty {
-                    let url=URL(string: self.app.urlScheme)
-                    if self.urlOpener.canOpenURL(url!){
-                        self.urlOpener.open(url!)
+            VStack {
+                Button(action: {
+                    print("test")
+                    //自アプリの場合は、アプリを開かず、設定画面へ遷移する
+                    if self.app.id==0{
+                        self.isHomeScreenView=true
+                    }
+                    //アプリが設定されていない場合はボタンを押しても無反応にする
+                    else if !self.app.urlScheme.isEmpty {
+                        let url=URL(string: self.app.urlScheme)
+                        if self.urlOpener.canOpenURL(url!){
+                            self.urlOpener.open(url!)
+                        }
+                    }
+                }) {
+                    VStack{
+                        Image(app.appIcon)
+                            .resizable()
+                            .frame(width: 50, height: 50, alignment: .center)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        
+                    }.accentColor(.init(.displayP3, red: 1, green: 0, blue: 0, opacity: 0))
+                        .sheet(isPresented: $isHomeScreenView) {
+                            OwnAppScreanView()
                     }
                 }
-            }) {
-                VStack{
-                    Image(app.appIcon)
-                        .resizable()
-                        .frame(width: 50, height: 50, alignment: .center)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                    Text(app.appName)
-                        .font(.footnote)
-                        .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 1))
-                }.accentColor(.init(.displayP3, red: 1, green: 0, blue: 0, opacity: 0))
+                Text(app.appName)
+                    .font(.footnote)
+                    .foregroundColor(Color(red: 0.0, green: 0.0, blue: 0.0, opacity: 1))
+                    .lineLimit(1)
+                    .frame(width: 50, height: 20, alignment: .center)
+                
             }
         }
     }
@@ -51,3 +65,4 @@ struct AppView_Previews: PreviewProvider {
             .previewLayout(.fixed(width: 80, height: 80))
     }
 }
+
