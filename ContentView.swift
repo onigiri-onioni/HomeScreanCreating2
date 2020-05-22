@@ -13,6 +13,7 @@ var dock:[AppStruct] = makeDockApps()
 var appViewRow:Int=0
 
 struct ContentView: View {
+    @ObservedObject var appSettingStr:AppSettingStructure
     
     var body: some View {
         ZStack {
@@ -26,7 +27,7 @@ struct ContentView: View {
                     if self.judgeRowLimitNum(num: item) {
                         HStack{
                             ForEach(0..<4){rowItem in
-                                AppView(app: apps[item + rowItem])
+                                AppView(app: apps[item + rowItem], appSettingStr: self.appSettingStr)
                                     .padding(.horizontal)
                             }
                         }
@@ -35,7 +36,7 @@ struct ContentView: View {
                 }
                 Spacer()
                 //画面下部のDockっぽい画面描写
-                DockView(dockApps: dock)
+                DockView(dockApps: dock, appSettingStr: appSettingStr)
             }
         }
     }
@@ -50,14 +51,14 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(appSettingStr: AppSettingStructure())
     }
 }
 
 func makeApps() -> [AppStruct] {
     var tempApps:[AppStruct]=[]
     
-    tempApps.append(AppStruct(id: 0, appName: "HomeScreen", appIcon: "house.fill", urlScheme: "HomeScrean"))
+    tempApps.append(AppStruct(id: 0, appName: "HomeScreen", appIcon: "HomeScrean", urlScheme: "HomeScrean"))
     
     for x in 1...24 {
         //CGFloatでないと計算時間がかかる

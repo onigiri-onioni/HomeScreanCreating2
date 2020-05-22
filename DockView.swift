@@ -11,6 +11,7 @@ import SwiftUI
 struct DockView: View {
     var dockApps:[AppStruct]
     let urlOpener = UIApplication.shared
+    @ObservedObject var appSettingStr: AppSettingStructure
     
     var body: some View {
         
@@ -19,13 +20,13 @@ struct DockView: View {
                 .foregroundColor(Color(.displayP3, red: 1, green: 1, blue: 1, opacity: 0.75))
                 .frame(width: 400, height: 120)
             HStack {
-                AppView(app: dockApps[0])
+                AppView(app: dockApps[0], appSettingStr: appSettingStr)
                     .padding(.horizontal)
-                AppView(app: dockApps[1])
+                AppView(app: dockApps[1], appSettingStr: appSettingStr)
                     .padding(.horizontal)
-                AppView(app: dockApps[2])
+                AppView(app: dockApps[2], appSettingStr: appSettingStr)
                     .padding(.horizontal)
-                AppView(app: dockApps[3])
+                AppView(app: dockApps[3], appSettingStr: appSettingStr)
                     .padding(.horizontal)
             }
         }
@@ -34,7 +35,8 @@ struct DockView: View {
 
 struct DockView_Previews: PreviewProvider {
     static var previews: some View {
-        DockView(dockApps: makeDockApps())
+        DockView(dockApps: makeDockApps(), appSettingStr: AppSettingStructure()
+        )
             .previewLayout(.fixed(width: 400, height: 120))
     }
 }
