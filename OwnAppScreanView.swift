@@ -9,12 +9,13 @@
 import SwiftUI
 
 struct OwnAppScreanView: View {
-    @ObservedObject var appSettingStr:AppSettingStructure
     @Binding var textR:Double
     @Binding var textG:Double
     @Binding var textB:Double
     @Binding var textO:Double
     @Binding var imageO:Double
+    
+    @State var showAlert=false
     
     var body: some View {
         NavigationView{
@@ -78,7 +79,18 @@ struct OwnAppScreanView: View {
                 }
                 .navigationBarItems(
                     leading: Text("設定画面")
-                        .font(.largeTitle))
+                        .font(.largeTitle),
+                    trailing: Button(action: {
+                        //設定値保存処理
+                        saveSettingUserDefaults(textR: self.textR, textG: self.textG, textB: self.textB, textO: self.textO, imageO: self.imageO)
+                        self.showAlert.toggle()
+                    }) {
+                        Text("保存")
+                    }
+                    .alert(isPresented: $showAlert){
+                        Alert(title: Text("保存完了"))
+                    }
+                    )
             }
         }
     }
@@ -86,7 +98,7 @@ struct OwnAppScreanView: View {
 
 struct OwnAppScreanView_Previews: PreviewProvider {
     static var previews: some View {
-        OwnAppScreanView(appSettingStr: AppSettingStructure(), textR: .constant(1.0), textG: .constant(1.0), textB: .constant(1.0), textO: .constant(1.0), imageO: .constant(1.0))
+        OwnAppScreanView(textR: .constant(0.0), textG: .constant(0.0), textB: .constant(0.0), textO: .constant(1.0), imageO: .constant(1.0))
     }
 }
 
@@ -94,3 +106,13 @@ struct OwnAppScreanView_Previews: PreviewProvider {
 //    //CGFloatにして計算時間を短縮
 //    return Double(CGFloat(numnum%255))
 //}
+
+func saveSettingUserDefaults(textR:Double, textG:Double, textB:Double, textO:Double, imageO:Double){
+    let userDefaults = UserDefaults.standard
+    userDefaults.set(textR, forKey: "textR")
+    userDefaults.set(textG, forKey: "textG")
+    userDefaults.set(textB, forKey: "textB")
+    userDefaults.set(textO, forKey: "textO")
+    userDefaults.set(imageO, forKey: "imageO")
+    userDefaults.synchronize()
+}

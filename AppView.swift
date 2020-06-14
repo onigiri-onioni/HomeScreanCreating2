@@ -14,11 +14,11 @@ struct AppView: View {
     let urlOpener = UIApplication.shared
     @State var isHomeScreenView:Bool = false
     @ObservedObject var appSettingStr: AppSettingStructure
-    @State var textR:Double=0.0
-    @State var textG:Double=0.0
-    @State var textB:Double=0.0
-    @State var textO:Double=1.0
-    @State var imageO:Double=1.0
+    @State var textR:Double=UserDefaults.standard.double(forKey: "textR")
+    @State var textG:Double=UserDefaults.standard.double(forKey: "textG")
+    @State var textB:Double=UserDefaults.standard.double(forKey: "textB")
+    @State var textO:Double=UserDefaults.standard.double(forKey: "textO")
+    @State var imageO:Double=UserDefaults.standard.double(forKey: "imageO")
     
     
     var body: some View {
@@ -59,14 +59,10 @@ struct AppView: View {
                             self.appSettingStr.textB=self.textB
                             self.appSettingStr.textO=self.textO
                             self.appSettingStr.imageO=self.imageO
-                            print("textR:"+String(self.appSettingStr.textR))
-                            print("textG:"+String(self.appSettingStr.textG))
-                            print("textB:"+String(self.appSettingStr.textB))
-                            print("textO:"+String(self.appSettingStr.textO))
-                            print("imageO:"+String(self.appSettingStr.imageO))
+                            UserDefaults.standard.synchronize()
                         }) {
                             //sheetを開いた先の画面指定
-                            OwnAppScreanView(appSettingStr : self.appSettingStr, textR: self.$textR, textG: self.$textG, textB: self.$textB, textO: self.$textO, imageO: self.$imageO)
+                            OwnAppScreanView(textR: self.$textR, textG: self.$textG, textB: self.$textB, textO: self.$textO, imageO: self.$imageO)
                     }
                 }
                 Text(app.appName)
