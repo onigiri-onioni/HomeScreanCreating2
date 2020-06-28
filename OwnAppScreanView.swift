@@ -16,11 +16,31 @@ struct OwnAppScreanView: View {
     @Binding var imageO:Double
     
     @State var showAlert=false
+    @State var addSheetFlg:Bool=false
     
     var body: some View {
         NavigationView{
             ScrollView {
                 VStack(){
+                    VStack{
+                        Button(action: {
+                            //アクション時の処理
+                            self.addSheetFlg.toggle()
+                        }){
+							Text("ショートカットを作成")
+								.font(.headline)
+								.foregroundColor(Color.blue)
+                        }
+                        .padding(.all)
+//                        .background(Color.blue)
+                            .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.blue, lineWidth: 2)
+                        )
+                            .sheet(isPresented: $addSheetFlg){
+                                shortCutAdditionEditor(shortcutName: "", URLscheme: "", shortcutIconName: "")
+                        }
+                    }
                     VStack(alignment: .center){
                         HStack{
                             Text("文字色設定")
