@@ -37,7 +37,7 @@ struct OwnAppScreanView: View {
                             .stroke(Color.blue, lineWidth: 2)
                         )
                             .sheet(isPresented: $addSheetFlg){
-                                shortCutAdditionEditor(shortcutName: "", URLscheme: "", shortcutIconName: "")
+                                shortCutAdditionEditor(shortcutName: "", URLscheme: "")
                         }
                     }
                     VStack(alignment: .center){

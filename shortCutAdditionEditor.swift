@@ -11,7 +11,6 @@ import SwiftUI
 struct shortCutAdditionEditor: View {
 	@State var shortcutName:String
 	@State var URLscheme:String
-	@State var shortcutIconName:String
 	
 	@State var showAlert=false
 	
@@ -79,6 +78,8 @@ struct shortCutAdditionEditor: View {
 				
 				Button(action: {
 					//登録処理
+					
+					//ダイアログの表示
 					self.showAlert.toggle()
 				}) {
 					Text("ショートカットを登録")
@@ -90,10 +91,10 @@ struct shortCutAdditionEditor: View {
 							.stroke(Color.blue, lineWidth: 2)
 					)
 					.alert(isPresented: $showAlert){
-						Alert(title: Text("登録完了"))
+						//登録フォーマットのチェック
+						Alert(title:
+							checkRegistFormat(shortcutName: shortcutName, URLscheme: URLscheme, imageSelected: imageSelected) ? Text("登録完了") : Text("データが入力されていないフォーマットがあるため\n登録出来ませんでした"))
 					}
-				
-				Spacer()
 			}
 			
 			if (showGetImageView) {
@@ -105,7 +106,7 @@ struct shortCutAdditionEditor: View {
 
 struct shortCutAdditionEditor_Previews: PreviewProvider {
 	static var previews: some View {
-		shortCutAdditionEditor(shortcutName: "testName", URLscheme: "nothing", shortcutIconName: "nothing")
+		shortCutAdditionEditor(shortcutName: "testName", URLscheme: "nothing")
 	}
 }
 
@@ -157,3 +158,11 @@ extension GetImageView: UIViewControllerRepresentable {
 	}
 }
 
+
+func checkRegistFormat(shortcutName: String, URLscheme:String, imageSelected:Image?) -> Bool {
+	let shortcutNameFlg:Bool = shortcutName.isEmpty ? false : true
+	let URLschemeFlg:Bool = URLscheme.isEmpty ? false : true
+	let shortcutIconNameFlg:Bool = imageSelected==nil ? false : true
+	
+	return (shortcutNameFlg && URLschemeFlg && shortcutIconNameFlg) ? true : false
+}
