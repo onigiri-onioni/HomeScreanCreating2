@@ -32,7 +32,6 @@ struct OwnAppScreanView: View {
 								.foregroundColor(Color.blue)
                         }
                         .padding(.all)
-//                        .background(Color.blue)
                             .overlay(
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(Color.blue, lineWidth: 2)
@@ -48,8 +47,8 @@ struct OwnAppScreanView: View {
                             Circle()
                                 .frame(width:100, height: 100)
                                 .padding()
+								.foregroundColor(Color(red: textR, green: textG, blue: textB, opacity: textO))
                         }
-                        .foregroundColor(Color(red: textR, green: textG, blue: textB, opacity: textO))
                         HStack{
                             Circle()
                                 .foregroundColor(.red)

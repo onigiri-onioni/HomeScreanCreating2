@@ -61,18 +61,22 @@ func makeApps() -> [AppStruct] {
     tempApps.append(AppStruct(id: 0, appName: "HomeScreen", appIcon: "HomeScrean", urlScheme: "HomeScrean"))
     
     for x in 1...24 {
-        //CGFloatでないと計算時間がかかる
-        switch CGFloat(x%4){
-        case 0:
-            tempApps.append(AppStruct(id: x, appName: "Twitter"+String(x), appIcon: "Twitter", urlScheme: "twitter://"))
-        case 1:
-            tempApps.append(AppStruct(id: x, appName: "Music"+String(x), appIcon: "music", urlScheme: "music://"))
-        case 2:
-            tempApps.append(AppStruct(id: x, appName: ""+String(x), appIcon: "", urlScheme: ""))
-        case 3:
-            tempApps.append(AppStruct(id: x, appName: "Trello"+String(x), appIcon: "Trello", urlScheme: "trello:"))
-        default: break
-        }
+		if x<20 {
+			//CGFloatでないと計算時間がかかる
+			switch CGFloat(x%4){
+			case 0:
+				tempApps.append(AppStruct(id: x, appName: "Twitter"+String(x), appIcon: "Twitter", urlScheme: "twitter://"))
+			case 1:
+				tempApps.append(AppStruct(id: x, appName: "Music"+String(x), appIcon: "music", urlScheme: "music://"))
+			case 2:
+				tempApps.append(AppStruct(id: x, appName: ""+String(x), appIcon: "", urlScheme: ""))
+			case 3:
+				tempApps.append(AppStruct(id: x, appName: "Trello"+String(x), appIcon: "Trello", urlScheme: "trello:"))
+			default: break
+			}
+		}else{
+			tempApps.append(AppStruct(id: x, appName: "", appIcon: "", urlScheme: ""))
+		}
     }
     
     return tempApps
