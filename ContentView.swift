@@ -14,6 +14,7 @@ var appViewRow:Int=0
 
 struct ContentView: View {
     @ObservedObject var appSettingStr:AppSettingStructure
+	@Environment(\.managedObjectContext) var viewContext
     
     var body: some View {
         ZStack {
