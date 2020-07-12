@@ -12,18 +12,15 @@ import UIKit
 import CoreData
 
 extension Application{
-	static func create(in managedObjectContext: NSManagedObjectContext, id:Int16, appName:String, urlScheme:String, appIcon:UIImage!){
+	static func create(in managedObjectContext: NSManagedObjectContext, id:Int, appName:String, urlScheme:String, appIcon:UIImage!){
 		let newApplication = self.init(context: managedObjectContext)
 		
 		//データベースに入れるデータの設定
-		newApplication.id=id
+		newApplication.id=Int16(id)
 		newApplication.appName=appName
 		newApplication.urlScheme=urlScheme
 		
 		if(appIcon != nil){
-			//UIImageをNSDataに変換
-			let appIconData = appIcon.jpegData(compressionQuality: 1.0)
-			
 			//UIImageの方向を確認
 			var appIconOrientation:Int = 0
 			switch appIcon.imageOrientation {
@@ -45,6 +42,7 @@ extension Application{
 				appIconOrientation = 0
 			}
 			
+			//UIImageをNSDataに変換
 			let jpegAppIcon = appIcon.toJPEGData()
 			newApplication.appIcon=jpegAppIcon
 			newApplication.appIconOrientation=Int16(appIconOrientation)
