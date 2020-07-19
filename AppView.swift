@@ -19,6 +19,7 @@ struct AppView: View {
 	@State var textB:Double=UserDefaults.standard.double(forKey: "textB")
 	@State var textO:Double=UserDefaults.standard.double(forKey: "textO")
 	@State var imageO:Double=UserDefaults.standard.double(forKey: "imageO")
+	@Environment(\.managedObjectContext) var viewContext
 	
 	//アイコン長押しに表示される編集ボタン
 	@State var editor = false
@@ -49,6 +50,7 @@ struct AppView: View {
 					}) {
 						//sheetを開いた先の画面指定
 						OwnAppScreanView(textR: self.$textR, textG: self.$textG, textB: self.$textB, textO: self.$textO, imageO: self.$imageO)
+						.environment(\.managedObjectContext, self.viewContext)
 					}
 					.gesture(
 						//HomeOverlayViewの表示

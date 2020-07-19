@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct OwnAppScreanView: View {
+	@Environment(\.managedObjectContext) var viewContext
     @Binding var textR:Double
     @Binding var textG:Double
     @Binding var textB:Double
@@ -38,6 +39,7 @@ struct OwnAppScreanView: View {
                         )
                             .sheet(isPresented: $addSheetFlg){
                                 shortCutAdditionEditor(shortcutName: "", URLscheme: "")
+								.environment(\.managedObjectContext, self.viewContext)
                         }
                     }
                     VStack(alignment: .center){
