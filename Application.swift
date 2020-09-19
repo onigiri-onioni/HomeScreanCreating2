@@ -12,13 +12,14 @@ import UIKit
 import CoreData
 
 extension Application{
-	static func create(in managedObjectContext: NSManagedObjectContext, id:Int, appName:String, urlScheme:String, appIcon:UIImage!){
+	static func create(in managedObjectContext: NSManagedObjectContext, appName:String, urlScheme:String, appIcon:UIImage!, sortOrder: Int){
 		let newApplication = self.init(context: managedObjectContext)
 		
 		//データベースに入れるデータの設定
-		newApplication.id=Int16(id)
+		newApplication.id=UUID()
 		newApplication.appName=appName
 		newApplication.urlScheme=urlScheme
+		newApplication.sortOrder=Int16(sortOrder)
 		
 		if(appIcon != nil){
 			//UIImageの方向を確認
@@ -50,6 +51,9 @@ extension Application{
 
 		do{
 			try managedObjectContext.save()
+			// path to application support
+			print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
+
 		}catch{
 			let nserror = error as NSError
 			fatalError("Unsolved Error.\n\(nserror), \(nserror.userInfo)")
@@ -84,4 +88,23 @@ public extension UIImage {
 		return data
 	}
 	
+}
+
+/// Data拡張(イメージ)
+public extension Data {
+
+    // MARK: Public Methods
+
+    /// データ→イメージに変換する
+    ///
+    /// - Returns: 変換後のイメージ
+	func toImage() -> UIImage {
+        guard let image = UIImage(data: self) else {
+            print("データをイメージに変換できませんでした。")
+            return UIImage()
+        }
+
+        return image
+    }
+
 }

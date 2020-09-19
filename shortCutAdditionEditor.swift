@@ -11,11 +11,21 @@ import Combine
 import UIKit
 
 struct shortCutAdditionEditor: View {
+	@Environment(\.presentationMode) var presentationMode
 	@Environment(\.managedObjectContext) var viewContext
 	@State var shortcutName:String
 	@State var URLscheme:String
 	
-	@State var showAlert=false
+	//coredataへの保存フォーマットチェックフラグ
+	@State var coredataFormatFlg: Bool=false
+	//coredataへの保存アラートフラグ
+	@State var alertFlg:Bool = false
+	//coredataへの保存が正常完了するときのアラート
+	@State var showAlertDone=false
+	//coredataへの保存ができなかったときのアラート
+	@State var showAlertFault=false
+	//保存できない場合のメッセージ
+	@State var alertMessage:String = ""
 	
 	@State var imageSelected: UIImage? = nil
 	@State var showGetImageView = false
@@ -70,10 +80,6 @@ struct shortCutAdditionEditor: View {
 								Text("アイコン登録")
 							}
 						}
-
-//						imageSelected?.resizable()
-//							.frame(width: 100, height: 100)
-//							.clipShape(RoundedRectangle(cornerRadius: 10))
 						if (imageSelected == nil) {
 							Rectangle()
 							.frame(width: 100, height: 100)
@@ -90,12 +96,25 @@ struct shortCutAdditionEditor: View {
 				Spacer()
 				
 				Button(action: {
-					//登録処理
-					//新規idを取得するコードが必要
+					//登録処理//
+					//登録フォーマットのチェック
+					self.coredataFormatFlg = checkRegistFormat(shortcutName: self.shortcutName, URLscheme: self.URLscheme, imageSelected: self.imageSelected)
 					
-					Application.create(in: self.viewContext, id: 100, appName: self.shortcutName, urlScheme: self.URLscheme, appIcon: self.imageSelected)
-					//ダイアログの表示
-					self.showAlert.toggle()
+					if self.coredataFormatFlg {
+						//登録フォーマットに沿っていた場合の処理
+						//新規id(と共にsortOrder)を取得するコードが必要
+						
+						Application.create(in: self.viewContext, appName: self.shortcutName, urlScheme: self.URLscheme, appIcon: self.imageSelected, sortOrder: 100)
+						//ダイアログの表示
+						self.showAlertDone.toggle()
+						self.alertMessage = "登録が完了しました"
+					} else {
+						//登録フォーマットに沿っていなかった場合の処理
+						self.showAlertFault.toggle()
+						self.alertMessage = judgeInputData(shortcutName: self.shortcutName, URLscheme: self.URLscheme, imageSelected: self.imageSelected)
+						
+					}
+					self.alertFlg.toggle()
 				}) {
 					Text("ショートカットを登録")
 						.font(.title)
@@ -105,9 +124,17 @@ struct shortCutAdditionEditor: View {
 						RoundedRectangle(cornerRadius: 15)
 							.stroke(Color.blue, lineWidth: 2)
 					)
-					.alert(isPresented: $showAlert){
-						//登録フォーマットのチェック
-						Alert(title: Text(setAlertText(shortcutName: shortcutName, URLscheme: URLscheme, imageSelected: imageSelected)))
+					.alert(isPresented: $alertFlg){
+						//登録完了のポップアップ表示
+						Alert(title: Text("メッセージ"), message: Text(alertMessage), dismissButton: .default(Text("OK"), action: {
+							if self.showAlertDone {
+								print("done")
+								self.presentationMode.wrappedValue.dismiss()
+							}else if self.showAlertFault {
+								//何もしない
+								print("nothing")
+							}
+						}))
 					}
 			}
 		}
@@ -139,4 +166,18 @@ func checkRegistFormat(shortcutName: String, URLscheme:String, imageSelected:UII
 	let shortcutIconNameFlg:Bool = imageSelected==nil ? false : true
 	
 	return (shortcutNameFlg && URLschemeFlg && shortcutIconNameFlg) ? true : false
+}
+
+func judgeInputData(shortcutName: String, URLscheme:String, imageSelected:UIImage?) -> String {
+	var alertText:String = ""
+	if shortcutName.isEmpty {
+		alertText += "ショートカット名が入力されていません\n"
+	}
+	if URLscheme.isEmpty {
+		alertText += "ショートカットURLが入力されていません\n"
+	}
+	if imageSelected == nil {
+		alertText += "アイコン画像が選択されていません"
+	}
+	return alertText
 }

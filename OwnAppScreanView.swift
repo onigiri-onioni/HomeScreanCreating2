@@ -107,6 +107,7 @@ struct OwnAppScreanView: View {
                         self.showAlert.toggle()
                     }) {
                         Text("保存")
+						Image(systemName: "arrow.2.circlepath.circle")
                     }
                     .alert(isPresented: $showAlert){
                         Alert(title: Text("保存完了"))
@@ -136,4 +137,5 @@ func saveSettingUserDefaults(textR:Double, textG:Double, textB:Double, textO:Dou
     userDefaults.set(textO, forKey: "textO")
     userDefaults.set(imageO, forKey: "imageO")
     userDefaults.synchronize()
+	
 }
